@@ -11,6 +11,10 @@ Processer::Processer()
     : id_(++s_id_)
 {
     runnable_list_.check_ = (void*)&s_id_;
+#if NO_MULTI_THREAD
+    if (id_ > 1)
+        ThrowError(eCoErrorCode::ec_disabled_multi_thread);
+#endif
 }
 
 void Processer::AddTaskRunnable(Task *tk)
@@ -31,9 +35,15 @@ uint32_t Processer::Run(uint32_t &done_count)
     DebugPrint(dbg_scheduler, "Run [Proc(%d) do_count:%u] --------------------------",
             id_, (uint32_t)runnable_list_.size());
 
+#if NO_MULTI_THREAD
+    std::size_t task_count = runnable_list_.size();
+#else
+# define task_count runnable_list_.size()
+#endif
+
     for (;;)
     {
-        if (c >= runnable_list_.size()) break;
+        if (c >= task_count) break;
         Task *tk = runnable_list_.pop();
         if (!tk) break;
         ++c;

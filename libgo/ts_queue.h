@@ -158,19 +158,19 @@ public:
         head_ = tail_ = 0;
     }
 
-    bool empty()
+    inline bool empty()
     {
         LockGuard lock(lck);
         return head_ == tail_;
     }
 
-    std::size_t size()
+    inline std::size_t size()
     {
         LockGuard lock(lck);
         return count_;
     }
 
-    void push(T* element)
+    inline void push(T* element)
     {
         LockGuard lock(lck);
         TSQueueHook *hook = static_cast<TSQueueHook*>(element);
@@ -183,7 +183,7 @@ public:
         IncrementRef(element);
     }
 
-    T* pop()
+    inline T* pop()
     {
         if (head_ == tail_) return nullptr;
         LockGuard lock(lck);
@@ -199,7 +199,7 @@ public:
         return (T*)ptr;
     }
 
-    void push(SList<T> && elements)
+    inline void push(SList<T> && elements)
     {
         if (elements.empty()) return ;  // empty的SList不能check, 因为stealed的时候已经清除check_.
         assert(elements.check(check_));
@@ -213,7 +213,7 @@ public:
     }
 
     // O(n), 慎用.
-    SList<T> pop_front(uint32_t n)
+    inline SList<T> pop_front(uint32_t n)
     {
         if (head_ == tail_) return SList<T>();
         LockGuard lock(lck);
@@ -232,7 +232,7 @@ public:
     }
 
     // O(n), 慎用.
-    SList<T> pop_back(uint32_t n)
+    inline SList<T> pop_back(uint32_t n)
     {
         if (head_ == tail_) return SList<T>();
         LockGuard lock(lck);
@@ -248,7 +248,7 @@ public:
         return SList<T>(first, last, c, check_);
     }
 
-    SList<T> pop_all()
+    inline SList<T> pop_all()
     {
         if (head_ == tail_) return SList<T>();
         LockGuard lock(lck);
@@ -263,7 +263,7 @@ public:
         return SList<T>(first, last, c, check_);
     }
 
-    bool erase(T* hook)
+    inline bool erase(T* hook)
     {
         LockGuard lock(lck);
         if (hook->check_ != (void*)check_) return false;

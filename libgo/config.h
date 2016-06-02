@@ -1,6 +1,8 @@
 #pragma once
 #include "cmake_config.h"
 #include <chrono>
+#include <stdio.h>
+#include <string>
 
 // VS2013²»Ö§³Öthread_local
 #if defined(_MSC_VER) && _MSC_VER < 1900

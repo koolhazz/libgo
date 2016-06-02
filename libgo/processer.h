@@ -1,4 +1,5 @@
 #pragma once
+#include "config.h"
 #include "task.h"
 #include "ts_queue.h"
 
@@ -12,7 +13,11 @@ class Processer
     : public TSQueueHook
 {
 private:
+#if NO_MULTI_THREAD
     typedef TSQueue<Task> TaskList;
+#else
+    typedef TSQueue<Task, false> TaskList;
+#endif
 
     Task* current_task_ = nullptr;
     TaskList runnable_list_;
